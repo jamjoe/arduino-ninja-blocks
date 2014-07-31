@@ -11,13 +11,12 @@
 #define ninjablockethernet_h
 
 #include <SPI.h>
-#include <Ethernet.h>
+#include <Adafruit_CC3000.h>
 
 #define DATA_SIZE  128
 #define GUID_LEN	36
 #define DATA_LEN	96
 
-class EthernetClient;
 
 class NinjaBlockClass {
 
