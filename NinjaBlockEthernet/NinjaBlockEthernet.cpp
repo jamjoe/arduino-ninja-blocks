@@ -4,8 +4,7 @@
 
 byte mac[] = { 0xCE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
 
-EthernetClient client;
-EthernetClient recvclient;
+Adafruit_CC3000_Client www;
 
 #define ALLNOTNULL(A, B, C) ((A!=NULL) && (B!=NULL) && (C!=NULL))
 
