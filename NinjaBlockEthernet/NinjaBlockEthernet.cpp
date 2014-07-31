@@ -4,7 +4,7 @@
 
 byte mac[] = { 0xCE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
 
-Adafruit_CC3000_Client www;
+Adafruit_CC3000_Client client;
 
 // These are the interrupt and control pins
 #define ADAFRUIT_CC3000_IRQ   3  // MUST be an interrupt pin!
@@ -31,19 +31,24 @@ int NinjaBlockClass::begin()
 {
 	int result = 1;
 	if (ALLNOTNULL(host, nodeID, token) // has connection params
-		&& (Ethernet.begin(mac)!=0) // has Dynamic IP address
+		&& cc3000.begin()// has Dynamic IP address
 		)
 	{
 		result = 1;
 		Serial.print("IP: ");
-		for (byte thisByte = 0; thisByte < kEthernetBytes; thisByte++) 
-		{
-			// print the value of each byte of the IP address:
-			Serial.print(Ethernet.localIP()[thisByte], DEC);
-			Serial.print(".");
-		}
+		cc3000.printIPdotsRev(ipAddress);
 		Serial.println();
 	}
+  Serial.print(F("\nAttempting to connect to ")); Serial.println(WLAN_SSID);
+  if (!cc3000.connectToAP(WLAN_SSID, WLAN_PASS, WLAN_SECURITY)) {
+    Serial.println(F("Failed!"));
+    while(1);
+  }
+    Serial.println(F("Request DHCP"));
+  while (!cc3000.checkDHCP())
+  {
+    delay(100);
+  }  
 	return result;
 }
 
