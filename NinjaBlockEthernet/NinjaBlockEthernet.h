@@ -9,7 +9,7 @@
  
 #ifndef ninjablockethernet_h
 #define ninjablockethernet_h
-
+#include <ccspi.h>
 #include <SPI.h>
 #include <Adafruit_CC3000.h>
 
