@@ -56,9 +56,7 @@ void NinjaBlockClass::httppost(char *postData)
 {	
 	Serial.print("_");
     if (!client.connected()) {
-        client.flush();
-        client.stop();
-        client.connect(host,port);
+        client = cc3000.connectTCP(host,port);
     }
 	if (client.connected()) {
 		sendHeaders(true,client);
