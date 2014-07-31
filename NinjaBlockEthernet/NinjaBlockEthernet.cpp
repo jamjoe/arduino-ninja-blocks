@@ -60,21 +60,20 @@ void NinjaBlockClass::httppost(char *postData)
     }
 	if (client.connected()) {
 		sendHeaders(true,client);
-		client.print("Content-Length: ");
-		client.println(strlen(postData));
-		client.println();
-		client.println(postData);	
-		Serial.print("Sent=");
-		Serial.println(postData);		
-		client.flush();
-		client.stop();
+		client.fastrprint("Content-Length: ");
+		client.fastrprintln(strlen(postData));
+		client.fastrprintln();
+		client.fastrprintln(postData);	
+		Serial.fastrprint("Sent=");
+		Serial.fastrprintln(postData);		
+		client.close();
 	} else {
 		Serial.println("Send Failed");
 	}
 	return;
 }
 
-void NinjaBlockClass::sendHeaders(bool isPOST, EthernetClient hclient) {
+void NinjaBlockClass::sendHeaders(bool isPOST, Adafruit_CC3000_Client hclient) {
 	char strData[DATA_LEN];
 	if (isPOST)  
 		strcpy(strData,"POST");
@@ -87,18 +86,18 @@ void NinjaBlockClass::sendHeaders(bool isPOST, EthernetClient hclient) {
 	else 
 		strcat(strData, "/commands");
 	strcat(strData, " HTTP/1.1\r\n");
-	hclient.print(strData);
+	hclient.fastrprint(strData);
 	strcpy(strData,"Host: "); 
 	strcat(strData ,host);
 	strcat(strData, "\r\n");
-	hclient.print(strData);
-	hclient.print("User-Agent: Ninja Arduino 1.1\r\n\
+	hclient.fastrprint(strData);
+	hclient.fastrprint("User-Agent: Ninja Arduino 1.1\r\n\
 Content-Type: application/json\r\n\
 Accept: application/json\r\n");
 	strcpy(strData,"X-Ninja-Token: ");
 	strcat(strData, token);
 	strcat(strData,"\r\n");
-	hclient.print(strData);
+	hclient.fastrprint(strData);
 }
 
 void NinjaBlockClass::send(char *data)
