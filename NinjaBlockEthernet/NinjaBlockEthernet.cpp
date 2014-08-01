@@ -28,7 +28,7 @@ Adafruit_CC3000 cc3000 = Adafruit_CC3000(ADAFRUIT_CC3000_CS, ADAFRUIT_CC3000_IRQ
                                    // you're accessing is quick to respond, you can reduce this value.
 
 int NinjaBlockClass::begin()
-{
+{   uint32_t ipAddress, netmask, gateway, dhcpserv, dnsserv;
 	int result = 1;
 	if (ALLNOTNULL(host, nodeID, token) // has connection params
 		&& cc3000.begin()// has Dynamic IP address
@@ -53,19 +53,27 @@ int NinjaBlockClass::begin()
 }
 
 void NinjaBlockClass::httppost(char *postData)
-{	
+{	uint32_t ip;
 	Serial.print("_");
+	int length;
     if (!client.connected()) {
-        client = cc3000.connectTCP(host,port);
+	      while (ip == 0) {
+			if (! cc3000.getHostByName(host, &ip)) {
+			Serial.println(F("Couldn't resolve!"));
+			}
+			delay(500);
+		  }
+        client = cc3000.connectTCP(ip,port);
     }
 	if (client.connected()) {
 		sendHeaders(true,client);
 		client.fastrprint("Content-Length: ");
-		client.fastrprintln(strlen(postData));
-		client.fastrprintln();
+		length = strlen(postData);
+		client.println(length);
+		client.println();
 		client.fastrprintln(postData);	
-		Serial.fastrprint("Sent=");
-		Serial.fastrprintln(postData);		
+		Serial.print("Sent=");
+		Serial.println(postData);		
 		client.close();
 	} else {
 		Serial.println("Send Failed");
